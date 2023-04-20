@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="@{/css/common/common.css}" th:href="@{/css/common/common.css}">
+  <link rel="stylesheet" href="@{/css/common/common_mainbeforeLogin.css}" th:href="@{/css/common/common_mainbeforeLogin.css}">
+  <link rel="stylesheet" href="@{/css/board/addboard.css}" th:href="@{/css/board/addboard.css}">
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcAJnqW9nAcULal2mEcF0rg3inKtuT27U&libraries=places&callback=initMap" async defer></script>
+  <title>구인글 등록</title>
+</head>
+<body>
+<div id="wrapper">
+  <!-- 헤더 fragment -->
+  <header th:replace="fragments/header :: header"></header>
+  <!-- GNB fragment -->
+  <div th:replace="fragments/gnb :: gnb"></div>
+    <div class="container" style="margin-top: 260px; height: 150; display: block;">
+      <h2 class="title">게시글 작성</h2>
+      <form  class="layout"  method="post"  th:object="${saveForm}"  enctype="multipart/form-data" >
+      <input type="text" name="title" placeholder="제목" th:field="*{titleJob}">
+          <span th:errors="*{titleJob}"></span>
+          <input type="date" th:field="*{closingDate}">
+          <span th:errors="*{closingDate}"></span>
+          <input type="text" maxlength="2" th:field="*{numberOfPersons}">
+          <span th:errors="*{numberOfPersons}"></span>
+          <input type="text" name="gender" value=""  placeholder="ex)남성우대,여성우대,성별무관" th:field="*{genderJob}">
+          <span th:errors="*{genderJob}"></span>
+          <select id="education" onchange="setEducation()" th:field="*{academicAbility}">
+            <option value="none">학력무관</option>
+            <option value="college_2_3">대졸(2,3년제) 이상</option>
+            <option value="college_4">대졸(4년제) 이상(예정자 가능)</option>
+          </select>
+          <span th:errors="*{academicAbility}"></span>
+          <select name="" id="" th:field="*{salaryWay}">
+            <option value="시급" >시급</option>
+            <option value="월급" >월급</option>
+            <option value="일급" >일급</option>
+            <option value="주급" >주급</option>
+          </select>
+          <span th:errors="*{salaryWay}"></span>
+          <input type="number" th:field="*{salaryAmount}">
+          <span th:errors="*{salaryAmount}"></span>
+          <p>근무기간</p><select name="" id="" th:field="*{workPeriod}">
+            <option value="3개월미만" >3개월미만</option>
+            <option value="3개월이상" >3개월이상</option>
+            <option value="6개월이상" >6개월이상</option>
+            <option value="1년이상" >1년이상</option>
+          </select>
+          <span th:errors="*{workPeriod}"></span>
+          <input type="text" name="contact_phone" placeholder="근무요일 ex) 주5일" th:field="*{workDay}">
+          <span th:errors="*{workDay}"></span>
+          <input type="time" name="" id="" th:field="*{comeInJob}">
+          <span th:errors="*{comeInJob}"></span>
+          <input type="time" name="" id="" th:field="*{comeOutJob}">
+          <span th:errors="*{comeOutJob}"></span>
+          <select name="" id="" th:field="*{workTypeJob}">
+            <option value="서빙" >서빙</option>
+            <option value="주방" >주방</option>
+            <option value="바" >바</option>
+            <option value="조리" >조리</option>
+            <option value="직종2" >직종2</option>
+            <option value="직종3" >직종3</option>
+            <option value="직종4" >직종4</option>
+          </select>
+          <span th:errors="*{workTypeJob}"></span>
+          <select name="" id="" th:field="*{employForm}">
+            <option value="일용직" >일용직</option>
+            <option value="계약직" >계약직</option>
+            <option value="정규직" >정규직</option>
+          </select>
+          <span th:errors="*{employForm}"></span>
+         <input type="text" placeholder="복리후생" name="" id="" th:field="*{benefitJob}">
+          <input type="text" placeholder="근무 지역" name="contact_phone" id="" th:field="*{placeName}">
+          <span th:errors="*{placeName}"></span>
+          <input type="text" placeholder="근무지 위치 검색" name="" id="location-input" th:field="*{placeAddress}">
+          <div id="map"></div>
+          <span th:errors="*{placeAddress}"></span>
+          <input type="text" name="contact_person" id="" placeholder="담당자" th:field="*{managerName}">
+          <span th:errors="*{managerName}"></span>
+          <input type="text" name="company_phone" id=""  placeholder="기업 전화번호"th:field="*{managerPhone}">
+          <span th:errors="*{managerPhone}"></span>
+        <textarea name="ir1" id="ir1" rows="10" cols="100" style="margin-top: 10px;" th:field="*{detailContent}"></textarea>
+        <input type="file" id="file-input" name="file" />
+        <input type="hidden" id="job-board-id" name="jobBoardId" />
+        <button type="submit" class="write-button" style="margin-left: 770px; margin-top: 20px;">등록하기</button>
+      </form>
+          <button type="submit" class="write-button" style="margin-left: 770px; margin-top: 20px;">등록하기</button>
+    </form>
+  </div>
+  <div th:replace="fragments/footer :: footer"></div>
+</div>
+</body>
+<script th:src="@{/js/addboard.js}" type="text/javascript"></script>
+</html>

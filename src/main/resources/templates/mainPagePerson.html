@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 후 페이지-구직자</title>
+  </head>
+  <body>
+    <h1>단디알바</h1>
+    <div>
+      <li>
+        <span th:text="|(${session.loginPerson?.namePerson})님 어서와~|"></span
+        ><a href="" th:href="@{/logout}">로그아웃</a>
+      </li>
+    </div>
+    <hr />
+    <ul>
+      <li><a href="" th:href="@{/}">구인게시판</a></li>
+      <li><a href="" th:href="@{/}">스케줄보기</a></li>
+      <li><a href="" th:href="@{/}">마이페이지</a></li>
+      <li><a href="" th:href="@{/}">고민게시판</a></li>
+      <li><a href="" th:href="@{/}">공지사항</a></li>
+    </ul>
+  </body>
+</html>

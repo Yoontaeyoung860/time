@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>스케줄 보기-기업</title>
+    <style>
+      .header {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+      }
+      .body {
+        display: flex;
+        flex-direction: column;
+      }
+      .body div {
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid #9a9a9a;
+        justify-content: space-around;
+      }
+      .body div div {
+        display: flex;
+        flex-direction: column;
+        border-bottom: none;
+      }
+      .body div div input[type='text'] {
+        display: flex;
+        height: 20px;
+        width: 100px;
+      }
+      .off {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>당신이 고용한 인원들 잘 관리해~</h2>
+    <a href="" th:href="@{/}">메인페이지</a>
+    <div class="inputBox off">
+      <form>
+        <input
+          type="hidden"
+          id="myId"
+          th:value="${session.loginCompany?.idCompany}"
+        />
+        <div>
+          구직자 프로필 사진: <input type="image" />
+          <input type="number" id="scheduleIdPk" style="display: none" />
+          <input type="text" placeholder="구직자 이름" id="nameSchedule" />
+          <input type="text" placeholder="구직자 아이디" id="idSchedule" />
+        </div>
+        <div>
+          담당업무:
+          <select id="workSchedule">
+            <option value="서빙">서빙</option>
+            <option value="주방장 및 조리사">주방장 및 조리사</option>
+            <option value="주방보조">주방보조</option>
+            <option value="바리스타">바리스타</option>
+            <option value="제과제빵사">제과제빵사</option>
+            <option value="바">바</option>
+            <option value="매장관리 및 판매">매장관리 및 판매</option>
+            <option value="사무보조">사무보조</option>
+          </select>
+        </div>
+        <div>
+          요일:
+          <select id="daySchedule" multiple>
+            <option value="월">월</option>
+            <option value="화">화</option>
+            <option value="수">수</option>
+            <option value="목">목</option>
+            <option value="금">금</option>
+            <option value="토">토</option>
+            <option value="일">일</option>
+          </select>
+          <!-- 요일: 월<input type="checkbox" value="월" id="daySchedule" /> 화<input
+            type="checkbox"
+            value="화"
+            id="daySchedule"
+          />
+          수<input type="checkbox" value="수" id="daySchedule" /> 목<input
+            type="checkbox"
+            value="목"
+            id="daySchedule"
+          />
+          금<input type="checkbox" value="금" id="daySchedule" /> 토<input
+            type="checkbox"
+            value="토"
+            id="daySchedule"
+          />
+          일<input type="checkbox" value="일" id="daySchedule" /> -->
+        </div>
+        <div>
+          출근: <input type="time" id="comeInSchedule" /> 퇴근:
+          <input type="time" id="comeOutSchedule" />
+        </div>
+        <div>
+          start: <input type="date" id="periodStart" /> end:
+          <input type="date" id="periodEnd" />
+        </div>
+        <div>
+          <button type="button" class="setBtn">등록</button>
+          <button>최소</button>
+        </div>
+      </form>
+    </div>
+    <hr />
+    <div class="box">
+      <div class="header">
+        <div>구직자</div>
+        <div>담당업무</div>
+        <div>요일</div>
+        <div>출퇴근 시간</div>
+        <div>상태정보</div>
+        <div>고용기간</div>
+        <div>///////</div>
+      </div>
+      <hr />
+      <form action="">
+        <div class="body">
+          <div style="display: none">
+            <div>
+              사진
+              <img />
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div>
+              <div></div>
+            </div>
+            <div>
+              <div></div>
+            </div>
+            <div>
+              출근
+              <div></div>
+              퇴근
+              <div></div>
+            </div>
+            <div>
+              <div></div>
+            </div>
+            <div>
+              <div></div>
+              <div></div>
+            </div>
+            <div>
+              <button type="button" class="updateBtn">수정</button>
+              <button type="button" class="delBtn">삭제</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div>
+      <button class="addBtn">스케줄 생성</button>
+    </div>
+    <script type="module" th:src="@{/js/ajax.js}"></script>
+    <script type="module">
+      import { ajax } from '/js/ajax.js';
+
+      const $scheduleFields = {
+        scheduleIdPk,
+        myId,
+        nameSchedule,
+        idSchedule,
+        workSchedule,
+        daySchedule,
+        comeInSchedule,
+        comeOutSchedule,
+        periodStart,
+        periodEnd,
+      };
+
+      const $allBtn = {
+        add: document.querySelector('.addBtn'),
+        set: document.querySelector('.setBtn'),
+        update: document.querySelector('.updateBtn'),
+        del: document.querySelector('.delBtn'),
+      };
+
+      // 목록
+      const listRow = (p) =>
+        `
+          <div>
+            <div>
+              사진
+              <img src="" alt="">
+              <div style="display: none;">${p.scheduleIdPk}</div>
+              <div style="display: none;">${p.myId}</div>
+              <div>${p.nameSchedule}</div>
+              <div>${p.idSchedule}</div>
+            </div>
+            <div>
+              <div>${p.workSchedule}</div>
+            </div>
+            <div>
+              <div>${p.daySchedule}</div>
+            </div>
+            <div>
+              출근 <div>${p.comeInSchedule}</div>
+              퇴근 <div>${p.comeOutSchedule}</div>
+            </div>
+            <div>
+              <div>${p.workSchedule}</div>
+            </div>
+            <div>
+              <div>${p.periodStart}</div>
+              <div>${p.periodEnd}</div>
+            </div>
+            <div>
+              <button type="button" class="updateBtn">수정</button>
+              <button type="button" class="delBtn">삭제</button>
+            </div>
+          </div>
+          `;
+
+      //신규 등록 -> 입력 창 생성
+      const $inputBox = document.querySelector('.inputBox');
+      const newForm = () => {
+        if (confirm('스케줄을 등록하시겠습니까?')) {
+          $allBtn.add.classList.toggle('off');
+          $inputBox.classList.toggle('off');
+        }
+      };
+      $allBtn.add.addEventListener('click', newForm);
+
+      //목록 기능
+      const list = (res) => {
+        console.log('list 나다');
+        if (res.header.rtcd == '00') {
+          const html = res.data.map((p) => listRow(p)).join('');
+          document.querySelector('.box .body').innerHTML = html;
+        } else {
+          console.log('오류');
+        }
+      };
+
+      const list_h = (e, id) => {
+        const url = `http://localhost:9080/api/schedules/managing/${id}`;
+        console.log(`url=${url}`);
+        ajax
+          .get(url)
+          .then((res) => res.json())
+          .then(list)
+          .then(console.dir(list))
+          .catch(console.error);
+      };
+
+      //등록
+      const add = (res) => {
+        if (res.header.rtcd == '00') {
+          document.querySelector('form').reset();
+          $allBtn.add.classList.toggle('off');
+          $inputBox.classList.toggle('off');
+          list_h();
+        }
+      };
+
+      const add_h = (e) => {
+        const url = `http://localhost:9080/api/schedules`;
+        const payload = {
+          myId: $scheduleFields.myId.value,
+          nameSchedule: $scheduleFields.nameSchedule.value,
+          idSchedule: $scheduleFields.idSchedule.value,
+          workSchedule: $scheduleFields.workSchedule.value,
+          daySchedule: $scheduleFields.daySchedule.value,
+          comeInSchedule: $scheduleFields.comeInSchedule.value,
+          comeOutSchedule: $scheduleFields.comeOutSchedule.value,
+          periodStart: $scheduleFields.periodStart.value,
+          periodEnd: $scheduleFields.periodEnd.value,
+        };
+        ajax
+          .post(url, payload)
+          .then((res) => res.json())
+          .then(add)
+          .catch(console.error);
+      };
+      $allBtn.set.addEventListener('click', add_h);
+
+      //수정1) 조회
+      const inquiry = (res) => {
+        if (res.header.rtcd == '00') {
+          $allBtn.add.classList.toggle('off');
+          $inputBox.classList.toggle('off');
+          $scheduleFields.scheduleIdPk.value = res.data.scheduleIdPk;
+          $scheduleFields.nameSchedule.value = res.data.nameSchedule;
+          $scheduleFields.idSchedule.value = res.data.idSchedule;
+          $scheduleFields.workSchedule.value = res.data.workSchedule;
+          $scheduleFields.daySchedule.value = res.data.daySchedule;
+          $scheduleFields.comeInSchedule.value = res.data.comeInSchedule;
+          $scheduleFields.comeOutSchedule.value = res.data.comeOutSchedule;
+          $scheduleFields.periodStart.value = res.data.periodStart;
+          $scheduleFields.periodEnd.value = res.data.periodEnd;
+        } else if (res.header.rtcd == '99') {
+          return;
+        }
+      };
+
+      const inquiry_h = (e, id) => {
+        const url = `http://localhost:9080/api/schedules/${id}`;
+        ajax
+          .get(url)
+          .then((res) => res.json())
+          .then(inquiry)
+          .catch(console.error);
+      };
+      $allBtn.update.addEventListener('click', (e) => {
+        const pid = $scheduleFields.idSchedule.value.trim();
+        inquiry_h(e, pid);
+      });
+
+      //수정2) 수정 처리
+      const modify = (res) => {
+        if (res.header.rtcd == '00') {
+          list_h();
+        } else {
+        }
+      };
+
+      const modify_h = (e, id) => {
+        const url = `http://localhost:9080/api/schedules/${id}`;
+        const payload = {
+          nameSchedule: $scheduleFields.nameSchedule.value,
+          idSchedule: $scheduleFields.idSchedule.value,
+          workSchedule: $scheduleFields.workSchedule.value,
+          daySchedule: $scheduleFields.daySchedule.value,
+          comeInSchedule: $scheduleFields.comeInSchedule.value,
+          comeOutSchedule: $scheduleFields.comeOutSchedule.value,
+          periodStart: $scheduleFields.periodStart.value,
+          periodEnd: $scheduleFields.periodEnd.value,
+        };
+        ajax
+          .patch(url, payload)
+          .then((res) => res.json())
+          .then(modify)
+          .catch(console.error);
+      };
+      $allBtn.update.addEventListener('click', (e) => {
+        const pid = $scheduleFields.scheduleIdPk.value.trim();
+        modify_h(e, pid);
+      });
+
+      //삭제
+      const del = (res) => {
+        if (res.header.rtcd == '00') {
+          list_h();
+        }
+      };
+
+      const del_h = (e, id) => {
+        const url = `http://localhost:9080/api/schedules/${id}`;
+        ajax
+          .delete(url)
+          .then((res) => res.json())
+          .then(del)
+          .catch(console.error);
+      };
+      $allBtn.del.addEventListener('click', (e) => {
+        const pid = $scheduleFields.scheduleIdPk.value.trim();
+        if (pid) {
+          confirm('삭제하시겠습니까?');
+          del_h(e, pid);
+        }
+      });
+
+      //목록 -> 화면 처리
+      list_h('', myId.value);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입-기업</title>
+</head>
+<body>
+    <h2>기업 회원가입</h2>
+  <hr>
+    <form action="/memberCompanies/singUp" method="post" th:object="${singUpCompany}">
+    <div>
+      <input type="text" name="" id="" placeholder="아이디" th:field="*{idCompany}">
+      <span th:errors="*{idCompany}"></span>
+    </div>
+    <div>
+      <input type="password" name="" id="" placeholder="비밀번호" th:field="*{pwCompany}">
+      <span th:errors="*{pwCompany}"></span>
+    </div>
+    <div>
+      <input type="password" name="" id="" placeholder="비밀번호 확인" th:field="*{pwChkCompany}">
+      <span th:errors="*{pwChkCompany}"></span>
+    </div>
+    <div>
+      <input type="text" name="" id="" placeholder="성명" th:field="*{nameCompany}" minlength="2" maxlength="5">
+      <span th:errors="*{nameCompany}"></span>
+    </div>
+    <div>
+      <input type="text" name="" id="" placeholder="생년월일(6자)" maxlength="10" th:field="*{businessCompany}">
+      <span th:errors="*{businessCompany}"></span>
+    </div>
+    <div>
+      <input type="text" name="" id="" placeholder="주소" th:field="*{addressCompany}">
+      <span th:errors="*{addressCompany}"></span>
+    </div>
+    <div>
+      <input type="text" name="" id="" placeholder="상세주소" th:field="*{detailAddressCompany}">
+      <span th:errors="*{detailAddressCompany}"></span>
+    </div>
+    <div>
+      <input type="email" name="" id="" placeholder="이메일" th:field="*{emailCompany}">
+      <span th:errors="*{emailCompany}"></span>
+    </div>
+      <p class="item item1"><label for="businessNm">사업자번호</label><input type="text" id="businessNm"><button id="chkBtn" type="button">확인</button></p>
+    <div>
+      <input type="tel" name="" id="" placeholder="전화번호('-'는 제외)" maxlength="11" th:field="*{phoneCompany}">
+      <span th:errors="*{phoneCompany}"></span>
+    </div>
+      <button id="submitBtn" type="submit" disabled>가입하기</button>
+  </form>
+</body>
+<script type="module">
+import {ajax} from '/js/common.js';
+  //사업자상태확인
+  const $chkBtn = document.getElementById('chkBtn');
+  $chkBtn.addEventListener('click',businessNumberChk_h,false);
+
+    //사업자 상태확인
+  function businessNumberChk_h(e){
+    const submitBtn = document.getElementById("submitBtn");
+    const key = 'bJ0AcEWnYARdHMe24EsPd77ralP%2BiRWLuhIeWgoIBgM%2F4dqlAgbS%2FilwgSiZkbkL9ojCBQHuEZI2TtoMqYzRhA%3D%3D';
+    const returnType = 'JSON';
+    const url =  `http://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${key}&returnType=${returnType}`;
+    const businessNm = document.getElementById('businessNm');
+    //const payLoad = JSON.parse(`{"b_no": [${businessNm.value} ] }`);
+    //const payLoad = { "b_no": [businessNm.value] };
+    const payLoad = { "b_no": [businessNm.value] };
+    //1)상태결과
+    const businessStatusChk = (res) => {
+      console.log(res);
+      if(res.status_code == 'OK'){
+        switch(res.data[0].b_stt_cd){ //납세자 상태
+          case "01": //계속사업자
+            console.log('계속');
+ // 회원가입 버튼 활성화
+          submitBtn.disabled = false;
+          break;
+        case "02": // 휴업자
+        case "03": // 폐업자
+        default:
+          // 회원가입 버튼 비활성화
+          submitBtn.disabled = true;
+          throw new Error(`${res.data[0].tax_type}`);
+      }
+    } else {
+      // 회원가입 버튼 비활성화
+      submitBtn.disabled = true;
+      throw new Error(`${res.description}`);
+    }
+  };
+    ajax.post(url,payLoad)
+      .then(res=>res.json())
+      .then(res=>businessStatusChk(res))
+      .catch(err=>console.log(err.message));
+  }
+</script>
+</html>

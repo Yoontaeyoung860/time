@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구인게시판-조회</title>
+</head>
+<body>
+  <div>
+    <form action="" th:object="${inquiryForm}">
+      <div>
+        <div>제목
+          <input type="text" th:field="*{titleJob}" disabled>
+        </div>
+        <div>사진
+          <input type="image" disabled>
+          <input class="input-jobBoardIdPk "type="text" th:field="*{jobBoardIdPk}" style="display: none;" disabled>
+        </div>
+        <div>모집조건
+          마감일 <input type="text" th:field="*{closingDate}" disabled>
+          인원 <input type="text" maxlength="2" th:field="*{numberOfPersons}" disabled>
+          성별 <input type="text" th:field="*{genderJob}" disabled>
+          학력 <input type="text" th:field="*{academicAbility}" disabled>
+        </div>
+        <div>근무조건
+          급여형태 <input type="text" th:field="*{salaryWay}" disabled>
+          급여 <input type="number" th:field="*{salaryAmount}" disabled>
+          근무기간 <input type="text" th:field="*{workPeriod}" disabled>
+          근무요일 <input type="text" th:field="*{workDay}" disabled>
+          근무시간
+          출근 <input type="text" th:field="*{comeInJob}" disabled>
+          퇴근 <input type="text" th:field="*{comeOutJob}" disabled>
+          업직종 <input type="text" th:field="*{workTypeJob}" disabled>
+          고용형태 <input type="text" th:field="*{employForm}" disabled>
+          복리후생 <input type="text" th:field="*{benefitJob}" disabled>
+        </div>
+        <div>근무지 정보
+          근무지명 <input type="text"  th:field="*{placeName}" disabled>
+          근무지주소 <input type="text" th:field="*{placeAddress}" disabled>
+        </div>
+        <div>상세모집요강
+          <input type="image" disabled>
+          <textarea cols="50" rows="10" th:field="*{detailContent}" disabled></textarea>
+        </div>
+        <div>채용담당자
+          <input type="text" th:field="*{managerName}" disabled>
+          <input type="text" th:field="*{managerPhone}" disabled>
+        </div>
+      </div>
+      <div>
+        <button type="button" class="modifyBtn">수정</button>
+        <button type="button" class="delBtn">삭제</button>
+        <button type="button" class="listBtn">목록</button>
+      </div>
+    </form>
+    <div class="info-bntgrp">
+      <button class="saveBtn" id="saveBtn" type="button">등록하기</button>
+    </div>
+
+    <!--리뷰-->
+    <!-- 리뷰 목록 -->
+    <h2>Reviews</h2>
+    <div id="reviews">
+      <ul>
+        <li th:each="review : ${reviews}">
+          <p th:text="${review.contentReview}"></p>
+          <p th:text="${review.rstar}"></p>
+          <p th:text="${review.rudate}"></p>
+          <button th:attr="data-review-id=${review.reviewIdPK}">Edit</button>
+          <button th:attr="data-review-id=${review.reviewIdPK}">Delete</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 리뷰 등록 폼 -->
+    <h2>Add Review</h2>
+    <form id="reviewAddForm">
+      <input type="hidden" id="jobBoardIdPk" th:value="${jobBoard != null ? jobBoard.idPk : ''}" />
+      <textarea name="contentReview" id="contentReview" placeholder="Your review..."></textarea>
+      <input type="number" name="rstar" id="rstar" min="1" max="5" placeholder="Rating (1-5)" />
+      <button type="submit">Submit Review</button>
+    </form>
+
+    <!-- 리뷰 수정 폼 -->
+    <div id="reviewEditForm" style="display: none;">
+      <h2>Edit Review</h2>
+      <form>
+        <input type="hidden" id="jobBoardIdPk" th:value="${jobBoard != null ? jobBoard.idPk : ''}" />
+        <textarea name="contentReview" id="editContentReview" placeholder="Your review..."></textarea>
+        <input type="number" name="rstar" id="editRstar" min="1" max="5" placeholder="Rating (1-5)" />
+        <button type="submit">Update Review</button>
+      </form>
+    </div>
+  </div>
+  <script>
+   const reviewAddForm = document.getElementById("reviewAddForm");
+
+  reviewAddForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const jobBoardIdPk = document.getElementById("jobBoardIdPk").value;
+    const contentReview = document.getElementById("contentReview").value;
+    const rstar = document.getElementById("rstar").value;
+
+    const reviewData = {
+      contentReview,
+      rstar,
+    };
+
+    try {
+      const response = await fetch(`/api/jobBoards/${jobBoardIdPk}/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (response.ok) {
+        alert("리뷰가 등록되었습니다.");
+        location.reload();
+      } else {
+        alert("리뷰 등록에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("오류가 발생하였습니다.");
+    }
+  });
+</script>
+  <script th:src="@{/js/jobBoardInquiry.js}"></script>
+</body>
+</html>

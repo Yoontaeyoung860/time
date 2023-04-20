@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>구인게시판-목록</title>
+    <style>
+      .list_header {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+      }
+      .list_body {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+      }
+      .list_body div {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid #9e9e9e;
+        justify-content: space-around;
+      }
+      .list_body div li {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>어서옵셔~알바구합니다!!</h2>
+    <div><a href="" th:href="@{/}">메인페이지</a></div>
+    <hr />
+    <div>
+      <form action="" th:method="post">
+        <div class="list_box">
+          <div class="list_header">
+            <div>구인자</div>
+            <div>근무지/제목</div>
+            <div>근무시간</div>
+            <div>급여</div>
+          </div>
+          <hr />
+          <div class="list_body">
+            <div th:each="jobBoard : ${jobLists}">
+              <div>
+                <li>사진</li>
+                <li th:text="${jobBoard.idJob}">아이디</li>
+              </div>
+              <div>
+                <li th:text="${jobBoard.placeName}">근무지명</li>
+                <li th:text="${jobBoard.placeAddress}">주소</li>
+                <li>
+                  <a
+                    href=""
+                    th:href="@{/jobBoards/{id}/inquiry(id=${jobBoard.jobBoardIdPk})}"
+                    th:text="${jobBoard.titleJob}"
+                    >타이틀</a
+                  >
+                </li>
+              </div>
+              <div>
+                <li th:text="${jobBoard.comeInJob}">출근시간</li>
+                <li th:text="${jobBoard.comeOutJob}">퇴근시간</li>
+              </div>
+              <div>
+                <li th:text="${jobBoard.salaryWay}">시급</li>
+                <li th:text="${jobBoard.salaryAmount}">0000원</li>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button class="addBtn" type="button">등록</button>
+        </div>
+      </form>
+    </div>
+    <script>
+      const $addBtn = document.querySelector(".addBtn");
+      const addBtn_h = (e) => {
+        location.href = `/jobBoards/createBoard`;
+      };
+      $addBtn.addEventListener("click", addBtn_h);
+    </script>
+  </body>
+</html>

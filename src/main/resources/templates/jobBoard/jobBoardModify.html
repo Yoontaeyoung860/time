@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구인게시판-수정</title>
+</head>
+<body>
+  <div>
+    <form action="" th:method="post" th:object="${updateForm}">
+      <div>
+        <div>제목
+          <input type="text" th:field="*{titleJob}">
+          <span th:errors="*{titleJob}"></span>
+        </div>
+        <div>사진
+          <input type="image">
+        </div>
+        <div>모집조건
+          마감일 <input type="date" th:field="*{closingDate}">
+          <span th:errors="*{closingDate}"></span>
+          인원 <input type="text" maxlength="2" th:field="*{numberOfPersons}">
+          <span th:errors="*{numberOfPersons}"></span>
+          성별 <input type="radio" name="gender" value="남" th:field="*{genderJob}">남<input type="radio" value="여" name="gender" th:field="*{genderJob}">여
+          <span th:errors="*{genderJob}"></span>
+          학력
+          <select name="" id="" th:field="*{academicAbility}">
+            <option value="초졸" >초졸</option>
+            <option value="중졸" >중졸</option>
+            <option value="고졸" >고졸</option>
+            <option value="대졸" >대졸</option>
+          </select>
+          <span th:errors="*{academicAbility}"></span>
+        </div>
+        <div>근무조건
+          급여형태
+          <select name="" id="" th:field="*{salaryWay}">
+            <option value="시급" >시급</option>
+            <option value="월급" >월급</option>
+            <option value="일급" >일급</option>
+            <option value="주급" >주급</option>
+          </select>
+          <span th:errors="*{salaryWay}"></span>
+          급여 <input type="number" th:field="*{salaryAmount}">
+          <span th:errors="*{salaryAmount}"></span>
+          근무기간
+          <select name="" id="" th:field="*{workPeriod}">
+            <option value="3개월미만" >3개월미만</option>
+            <option value="3개월이상" >3개월이상</option>
+            <option value="6개월이상" >6개월이상</option>
+            <option value="1년이상" >1년이상</option>
+          </select>
+          <span th:errors="*{workPeriod}"></span>
+          근무요일
+          <select name="" id="" th:field="*{workDay}" multiple>
+            <option value="월" >월</option>
+            <option value="화" >화</option>
+            <option value="수" >수</option>
+            <option value="목" >목</option>
+            <option value="금" >금</option>
+            <option value="토" >토</option>
+            <option value="일" >일</option>
+          </select>
+          <span th:errors="*{workDay}"></span>
+          근무시간
+          출근<input type="time" name="" id="" th:field="*{comeInJob}">
+          <span th:errors="*{comeInJob}"></span>
+          퇴근<input type="time" name="" id="" th:field="*{comeOutJob}">
+          <span th:errors="*{comeOutJob}"></span>
+          업직종
+          <select name="" id="" th:field="*{workTypeJob}">
+            <option value="서빙" >서빙</option>
+            <option value="주방" >주방</option>
+            <option value="바" >바</option>
+            <option value="조리" >조리</option>
+            <option value="직종2" >직종2</option>
+            <option value="직종3" >직종3</option>
+            <option value="직종4" >직종4</option>
+          </select>
+          <span th:errors="*{workTypeJob}"></span>
+          고용형태
+          <select name="" id="" th:field="*{employForm}">
+            <option value="일용직" >일용직</option>
+            <option value="계약직" >계약직</option>
+            <option value="정규직" >정규직</option>
+          </select>
+          <span th:errors="*{employForm}"></span>
+          복리후생 <input type="text" name="" id="" th:field="*{benefitJob}">
+        </div>
+        <div>근무지 정보
+          근무지명 <input type="text" name="" id="" th:field="*{placeName}">
+          <span th:errors="*{placeName}"></span>
+          근무지주소 <input type="text" name="" id="" th:field="*{placeAddress}">
+          <span th:errors="*{placeAddress}"></span>
+        </div>
+        <div>상세모집요강
+          <input type="image" name="" id="" >
+          <textarea name="" id="" cols="50" rows="10" th:field="*{detailContent}"></textarea>
+        </div>
+        <div>채용담당자
+          <input type="text" name="" id="" th:field="*{managerName}">
+          <span th:errors="*{managerName}"></span>
+          <input type="text" name="" id="" th:field="*{managerPhone}">
+          <span th:errors="*{managerPhone}"></span>
+        </div>
+      </div>
+      <div>
+        <button>완료</button>
+        <button type="button" class="cancelBtn">취소</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    const $cancelBtn = document.querySelector('.cancelBtn');
+    const cancel_h = e => {
+      history.back();
+    }
+    $cancelBtn.addEventListener('click', cancel_h);
+  </script>
+</body>
+</html>
